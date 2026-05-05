@@ -9,10 +9,10 @@ This documentation explains how to integrate Wazuh with an external SMS Gateway 
 Wazuh allows integration with external APIs via its framework. This custom integration triggers when an alert matches the specified criteria and sends the alert data to a pre-configured SMS endpoint.
 
 # Features
-Real-time SMS alert for critical threats
-Server down/up হলে instant notification
-Faster incident response
-Works with Wazuh SIEM
+Real-time SMS alert for critical threats                                                              
+Server down/up হলে instant notification                                                                       
+Faster incident response                                                                                         
+Works with Wazuh SIEM                                                                                            
 
 # Prerequisites
 Wazuh Manager installed and running.
