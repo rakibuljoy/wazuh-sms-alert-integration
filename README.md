@@ -27,14 +27,7 @@ First, you need to tell Wazuh to use the custom integration. Edit the Wazuh mana
 Bash                                                                                                         
 nano /var/ossec/etc/ossec.conf                                                                   
 Add the following block inside the <ossec_config> section:                                                                         
-
-XML                                                                                           
-<integration>                                                              
-  <name>office_sms</name>                                           
-  <level>10</level>                                                                                                      
-  <alert_format>json</alert_format>                                                                                           
-</integration>                                                                                                                                       
-Parameters:                                                                                                         
+                                                                                                                                                                                                                                      
 name: The name of the executable script (must start with custom-).                                                  
 
 level: The minimum alert level that triggers this integration (e.g., 10 for high-security events).                         
