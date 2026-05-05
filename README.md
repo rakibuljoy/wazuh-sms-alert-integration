@@ -27,7 +27,7 @@ First, you need to tell Wazuh to use the custom integration. Edit the Wazuh mana
 Bash                                                                                                         
 nano /var/ossec/etc/ossec.conf                                                                   
 Add the following block inside the <ossec_config> section:                                                                         
-                                                                                                                                                                                                                                      
+open "ossec.conf" file and copy the XML code and paste your ossec.conf file.                                                                                                                                                                                                                                      
 name: The name of the executable script (must start with custom-).                                                  
 
 level: The minimum alert level that triggers this integration (e.g., 10 for high-security events).                         
