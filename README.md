@@ -1,4 +1,4 @@
-# 📱 Wazuh SMS Alerting via RT Communications API
+# 📱 Wazuh SMS Alerting via API
 
 Real-time SMS notifications from Wazuh SIEM for critical security events — agent connectivity changes and high-severity vulnerability alerts — using Bangladesh's RT Communications SMS gateway.
 
@@ -29,7 +29,7 @@ graph TD
     D -->|group: sms_notify| F
     E --> F
     F -->|Calls script| G[custom-sms-alert\nPython Script]
-    G -->|HTTP POST JSON| H[RT Communications API\napi.rtcom.xyz]
+    G -->|HTTP POST JSON| H[API\napi.rtcom.xyz]
     H -->|SMS Delivery| I[📱 SOC Engineer Phone]
 ```
 
