@@ -1,0 +1,78 @@
+#!/usr/bin/env python3
+import sys
+import json
+import requests
+from datetime import datetime
+
+try:
+    # Step 1: Wazuh থেকে alert file path নেওয়া
+    alert_file_path = sys.argv[1]
+
+    with open(alert_file_path, 'r') as f:
+        alert_json = json.loads(f.readline())
+
+    # Step 2: Alert data extract করা
+    rule_id      = alert_json.get('rule', {}).get('id', '0')
+    alert_level  = alert_json.get('rule', {}).get('level', '0')
+    alert_desc   = alert_json.get('rule', {}).get('description', 'No Description')
+    agent_name   = alert_json.get('agent', {}).get('name', 'Unknown')
+    timestamp    = datetime.now().strftime("%H:%M %d-%m-%Y")
+
+    # Step 3: RT Communications API config
+    sms_url = "https://api.rtcom.xyz/onetomany"
+
+    payload = {
+        "acode":           "YOUR_ACODE",        # RT Communications portal থেকে নেওয়া
+        "api_key":         "YOUR_API_KEY",       # RT Communications portal থেকে নেওয়া
+        "senderid":        "YOUR_SENDER_ID",     # RT Communications portal থেকে নেওয়া
+        "type":            "text",
+        "msg":             "",
+        "contacts":        "8801XXXXXXXXX",      # যেমন: 8801712345678
+        "transactionType": "",
+        "contentID":       ""
+    }
+
+    # Step 4: Rule অনুযায়ী আলাদা SMS message তৈরি
+    if rule_id == '110600':
+        # Agent offline
+        payload["msg"] = (
+            f"[WAZUH ALERT]\n"
+            f"Agent OFFLINE!\n"
+            f"Agent: {agent_name}\n"
+            f"Time: {timestamp}"
+        )
+    elif rule_id == '110601':
+        # Agent online
+        payload["msg"] = (
+            f"[WAZUH ALERT]\n"
+            f"Agent ONLINE\n"
+            f"Agent: {agent_name}\n"
+            f"Time: {timestamp}"
+        )
+    else:
+        # High vulnerability alert (level 12+)
+        payload["msg"] = (
+            f"[WAZUH HIGH ALERT]\n"
+            f"Level: {alert_level}\n"
+            f"Agent: {agent_name}\n"
+            f"Rule: {rule_id}\n"
+            f"Desc: {alert_desc[:60]}"
+        )
+
+    # Step 5: API তে POST request পাঠানো
+    headers = {'Content-Type': 'application/json'}
+    response = requests.post(sms_url, json=payload, headers=headers, timeout=10)
+
+    # Step 6: Debug log লেখা
+    now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    with open("/var/ossec/logs/sms_debug.log", "a") as log:
+        log.write(
+            f"[{now}] RuleID:{rule_id} Level:{alert_level} "
+            f"Agent:{agent_name} Status:{response.status_code} "
+            f"Response:{response.text}\n"
+        )
+
+except Exception as e:
+    now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    with open("/var/ossec/logs/sms_error.log", "a") as log:
+        log.write(f"[{now}] Script Error: {str(e)}\n")

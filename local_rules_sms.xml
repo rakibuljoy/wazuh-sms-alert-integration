@@ -1,0 +1,19 @@
+<!-- ============================================================
+     Wazuh SMS Alerting — Custom Rules
+     Add inside the <group> block in local_rules.xml
+     ============================================================ -->
+
+<!-- Agent Stop/Start SMS Rules -->
+<!-- These wrap built-in rules 506 (agent stop) and 503 (agent start) -->
+<!-- Level raised so group filter triggers the integration -->
+<rule id="110600" level="5">
+  <if_sid>506</if_sid>
+  <description>Agent disconnected - SMS alert</description>
+  <group>sms_notify,</group>
+</rule>
+
+<rule id="110601" level="5">
+  <if_sid>503</if_sid>
+  <description>Agent connected - SMS alert</description>
+  <group>sms_notify,</group>
+</rule>
